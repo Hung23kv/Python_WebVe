@@ -1,0 +1,144 @@
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static '/css/selectSeat.css' %}">
+{% endblock %}
+
+{%block main-content %}
+    <div class="container">
+        <h1 style="text-align: center;">Chọn ghế</h1>
+
+        <div class="seat-options">
+            <form method="POST" onsubmit="return updateTotalBeforeSubmit()">
+                <div class="options-row">
+                    <span class="seat-label">Ghế Trước:</span>
+                    <div class="seat-controls">
+                        <button type="button" class="seat-btn" onclick="decrementSeat('frontSeatQty')">-</button>
+                        <input type="number" id="frontSeatQty" name="frontSeatQty" class="seat-input" value="0" min="0" max="6" onchange="updateTotal()">
+                        <button type="button" class="seat-btn" onclick="incrementSeat('frontSeatQty', 6)">+</button>
+                    </div>
+                    <span class="seat-price">110,000 đ</span>
+                </div>
+                
+                <div class="options-row">
+                    <span class="seat-label">Ghế Sau:</span>
+                    <div class="seat-controls">
+                        <button type="button" class="seat-btn" onclick="decrementSeat('backSeatQty')">-</button>
+                        <input type="number" id="backSeatQty" name="backSeatQty" class="seat-input" value="0" min="0" max="20" onchange="updateTotal()">
+                        <button type="button" class="seat-btn" onclick="incrementSeat('backSeatQty', 20)">+</button>
+                    </div>
+                    <span class="seat-price">100,000 đ</span>
+                </div>
+                
+                <div class="total-row">
+                    <span class="total-label">Thành tiền:</span>
+                    <input type="hidden" id="hiddenTotalAmount" name="hiddenTotalAmount" value="0">
+                    <span class="total-amount" id="totalAmount">0 đ</span>
+                </div>
+                
+                <button type="submit" class="confirm-btn" onclick="confirmSelection()">Xác nhận</button>
+            </form>
+
+            <!-- Seat layout section -->
+            <div class="seat-layout">
+                <div class="bus-layout">
+                    <!-- Driver area -->
+                    <div class="driver-area">
+                        <div class="steering-wheel-icon"></div>
+                        <div class="seat driver"></div>
+                        <div class="driver-label">Bác tài</div>
+                    </div>
+                    
+                    <!-- Front row -->
+                    <div>
+                        <div class="row-label">Số ghế đầu</div>
+                        <div class="bus-seat-row">
+                            <div class="seat-column">
+                                <div class="seat-container">
+                                    <div class="seat front"></div>
+                                </div>
+                            </div>
+                            <div class="quantity-column">
+                                <div class="quantity-label">Còn lại</div>
+                                <div class="quantity-value">5</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Back row -->
+                    <div>
+                        <div class="row-label">Số ghế sau</div>
+                        <div class="bus-seat-row">
+                            <div class="seat-column">
+                                <div class="seat-container">
+                                    <div class="seat back"></div>
+                                </div>
+                            </div>
+                            <div class="quantity-column">
+                                <div class="quantity-label">Còn lại</div>
+                                <div class="quantity-value">5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Giá tiền mỗi loại ghế
+        const frontSeatPrice = 110000;
+        const backSeatPrice = 100000;
+
+        // Hàm tăng số lượng ghế
+        function incrementSeat(seatId, maxValue) {
+            let seatInput = document.getElementById(seatId);
+            if (parseInt(seatInput.value) < maxValue) {
+                seatInput.value = parseInt(seatInput.value) + 1;
+                updateTotal();
+            }
+        }
+
+        // Hàm giảm số lượng ghế
+        function decrementSeat(seatId) {
+            let seatInput = document.getElementById(seatId);
+            if (parseInt(seatInput.value) > 0) {
+                seatInput.value = parseInt(seatInput.value) - 1;
+                updateTotal();
+            }
+        }
+
+        // Hàm cập nhật tổng tiền
+        function updateTotal() {
+            let frontSeatQty = parseInt(document.getElementById("frontSeatQty").value);
+            let backSeatQty = parseInt(document.getElementById("backSeatQty").value);
+            
+            let totalPrice = (frontSeatQty * frontSeatPrice) + (backSeatQty * backSeatPrice);
+
+            document.getElementById("totalAmount").textContent = totalPrice.toLocaleString('vi-VN') + " đ";
+            document.getElementById("hiddenTotalAmount").value = totalPrice;
+        }
+
+        // Kiểm tra trước khi gửi form
+        function updateTotalBeforeSubmit() {
+            let totalPrice = parseInt(document.getElementById("hiddenTotalAmount").value);
+            if (totalPrice === 0) {
+                alert("Vui lòng chọn ít nhất một ghế trước khi xác nhận!");
+                return false;
+            }
+            return true;
+        }
+
+        // Hiển thị thông báo khi xác nhận
+        function confirmSelection() {
+            let frontSeatQty = parseInt(document.getElementById("frontSeatQty").value);
+            let backSeatQty = parseInt(document.getElementById("backSeatQty").value);
+            let totalPrice = document.getElementById("totalAmount").textContent;
+
+            if (frontSeatQty > 0 || backSeatQty > 0) {
+                alert(`Bạn đã chọn:\n- ${frontSeatQty} Ghế Trước\n- ${backSeatQty} Ghế Sau\nTổng tiền: ${totalPrice}`);
+            } else {
+                alert("Vui lòng chọn ít nhất một ghế!");
+            }
+        }
+    </script>
+{%endblock main-content %}

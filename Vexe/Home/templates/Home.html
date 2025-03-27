@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block Seach %}
+        <section class="banner">
+        <h1>Đặt Vé Nhanh - Tiện Lợi - An Toàn</h1>
+        </section>
+        <section class="search">
+            <h2>Tìm Chuyến Xe</h2>
+            <form action="" method="post">
+                <div class="row">
+                    <input type="text" placeholder="Điểm đi" name="ipNoiDi" required>
+                    <input type="text" placeholder="Điểm đến" name="ipNoiDen" required>
+                    <input type="date" name="ipngay">
+                    <div style = "margin-bottom: 20px;"> </div>
+                    <button type="submit">Tìm Kiếm</button>
+                </div>
+                
+            </form>
+        </section>
+{% endblock Seach %}
+
+{%block main-content %}
+            <section class="popular-routes">
+                <h2>Các Tuyến Mới</h2>
+                <div id="route-list">
+                    <div class="route">
+                        <p><strong>Hà Nội - Hồ Chí Minh</strong></p>
+                        <p><span class="price">500,000</span> VNĐ</p>
+                    </div>
+                    <div class="route">
+                        <p><strong>Đà Nẵng - Nha Trang</strong></p>
+                        <p><span class="price">350,000</span> VNĐ</p>
+                    </div>
+                    <div class="route">
+                        <p><strong>Hải Phòng - Cần Thơ</strong></p>
+                        <p><span class="price">600,000</span> VNĐ</p>
+                    </div>
+                    <div class="route">
+                        <p><strong>Huế - Đà Nẵng</strong></p>
+                        <p><span class="price">200,000</span> VNĐ</p>
+                    </div>
+                    <div class="route">
+                        <p><strong>Vinh - Hà Nội</strong></p>
+                        <p><span class="price">250,000</span> VNĐ</p>
+                    </div>
+                </div>
+            </section>
+
+        {% endblock main-content %}
+
+    {% block footer %}
+        <footer>
+            <p>Liên hệ: 0123-456-789 | Email: support@vexeonline.com</p>
+        </footer>
+    {% endblock footer%}

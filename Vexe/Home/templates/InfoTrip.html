@@ -1,0 +1,121 @@
+{% extends "base.html" %}  
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static '/css/CarInfo.css' %}">
+{% endblock %}
+{% block Seach %}
+    <div class="search-bar d-flex justify-content-center" >
+            <form action="" method="post" >
+                <div class="search-inputs" >
+                <div class="input-group">
+                    <i class="location-icon">📍</i>
+                    <input type="text" placeholder="Điểm đi" name="ipNoiDi" required>
+                </div>
+                <div class="swap-icon fs-4" style="font-size: 20px;">➡</div>
+                <div class="input-group">
+                    <i class="location-icon">📍</i>
+                    <input type="text" placeholder="Điểm đến" name="ipNoiDen" required>
+                </div>
+                <div class="input-group">
+                    <i class="calendar-icon">📅</i>
+                    <input type="date" name="ipngay">
+                </div>
+                 <button class="search-button" type="submit">Tìm kiếm</button>
+            </div>
+            </form>   
+    </div>
+{% endblock Seach %}
+{%block main-content %}
+    <div class="content">
+    <!-- Filters -->
+    <div class="filters">
+        <h3>Sắp xếp</h3>
+            <div class="filter-options">
+                <label class="radio-container">
+                    <input type="radio" name="sort" checked>
+                    <span class="radio-label">Mặc định</span>
+                </label>
+                <label class="radio-container">
+                    <input type="radio" name="sort">
+                    <span class="radio-label">Giá tăng dần</span>
+                </label>
+                <label class="radio-container">
+                    <input type="radio" name="sort">
+                    <span class="radio-label">Giá giảm dần</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="results">
+            <div class='results-header'>
+                <h2>🚌 Hiện có 3 chuyến</h2>
+            </div>
+
+            <!-- Bus Cards - Horizontal Layout -->
+            <div class="bus-cards-grid">
+                <div class="bus-card">
+                    <div class="bus-info">
+                        <div class="company-info">
+                            <img src="Image/bus1.jpg" alt="Xe">
+                            <div>
+                                <h3>Xe Hòa Bình</h3>
+                                <p>25/03/2025</p>
+                                <p>Ghế ngồi</p>
+                            </div>
+                        </div>
+                        <div class="trip-info">
+                            <div class="time-info">
+                                <div class="departure">
+                                    <p>Hà Nội</p>
+                                </div>
+                                <div class="duration">4h</div>
+                                <div class="arrival">
+                                    <p>Hải Phòng</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-info">
+                            <div class="price">
+                                <span class="current-price">200.000đ</span>
+                            </div>
+                            <span class="seats">Còn 10 chỗ trống</span>
+                            <a class="btn btn-primary" href="{%url 'detail'%}" role="button">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bus-card">
+                    <div class="bus-info">
+                        <div class="company-info">
+                            <img src="Image/bus2.jpg" alt="Xe">
+                            <div>
+                                <h3>Xe Mai Linh</h3>
+                                <p>26/03/2025</p>
+                                <p>Giường nằm</p>
+                            </div>
+                        </div>
+                        <div class="trip-info">
+                            <div class="time-info">
+                                <div class="departure">
+                                    <p>TP. Hồ Chí Minh</p>
+                                </div>
+                                <div class="duration">8h</div>
+                                <div class="arrival">
+                                    <p>Nha Trang</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-info">
+                            <div class="price">
+                                <span class="current-price">350.000đ</span>
+                            </div>
+                            <span class="seats">Còn 5 chỗ trống</span>
+                            <button type="button" class="book-button">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main-content %}

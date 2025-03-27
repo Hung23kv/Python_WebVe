@@ -332,7 +332,6 @@
   font-size: 14px;
   color: #666;
 }
-
 /* Responsive Design */
 @media (max-width: 992px) {
   .bus-info {
