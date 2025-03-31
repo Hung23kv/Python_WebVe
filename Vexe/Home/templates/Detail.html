@@ -55,7 +55,15 @@
             </div>
         </div>        
     </div>
-    
+    <div id="seat-dialog" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div id="seat-content">
+                <!-- Nội dung chọn ghế sẽ được load động -->
+            </div>
+        </div>
+    </div>
+
     <div class="tabs">
         <ul class="tab-list">
             <li class="tab-item">
@@ -156,9 +164,115 @@
             document.getElementById(button.getAttribute('data-tab')).classList.add('active');
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+        const chooseSeatButton = document.querySelector('.btn-choose');
+        const seatDialog = document.getElementById('seat-dialog');
+        const seatContent = document.getElementById('seat-content');
+        const closeButton = seatDialog.querySelector('.close-btn');
 
+        chooseSeatButton.addEventListener('click', function() {
+            // Sử dụng fetch để load nội dung động
+            fetch("{% url 'seat' %}")
+                .then(response => response.text())
+                .then(html => {
+                    seatContent.innerHTML = html;
+                    // gan lai cac js cu
+                    seatContent.querySelectorAll("script").forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    newScript.textContent = oldScript.textContent; // Copy nội dung script
+                    document.body.appendChild(newScript); // Gắn lại vào document
+                    oldScript.remove(); // Xóa script cũ
+                    });
+
+                    seatDialog.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Lỗi load nội dung:', error);
+                    alert('Không thể tải giao diện chọn ghế');
+                });
+        });
+
+        closeButton.addEventListener('click', function() {
+            seatDialog.style.display = 'none';
+        });
+
+        // Đóng modal khi click ngoài
+        window.addEventListener('click', function(event) {
+            if (event.target == seatDialog) {
+                seatDialog.style.display = 'none';
+            }
+        });
+        
+    });
     
 </script>
+
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px); /* Hiệu ứng làm mờ nền */
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    /* Hiệu ứng mở modal */
+    .modal.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    /* Cải thiện giao diện modal-content */
+    .modal-content {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        width: 550px;
+        max-width: 90%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        transform: translateX(-20px);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* Khi mở modal */
+    .modal.show .modal-content {
+        transform: translateY(0);
+    }
+
+    /* Nút đóng */
+    .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .close-btn:hover {
+        background-color: #e60000;
+        transform: scale(1.1);
+    }
+</style>
 {% endblock main-content %}
 
 {% block footer %}
