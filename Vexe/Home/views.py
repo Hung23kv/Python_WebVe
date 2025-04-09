@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from Admin.models import Trip,Route
+from Admin.models import Trip
 # Create your views here.
 def home(request):
     data = Trip.objects.raw('''

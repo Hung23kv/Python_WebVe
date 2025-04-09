@@ -82,7 +82,7 @@ class Bus(models.Model):
     type = models.CharField(max_length=100)
     seat_count = models.IntegerField()
     license_plate = models.CharField(max_length=20, blank=True)
-    image = models.TextField()
+    image = models.ImageField()
 
     class Meta:
         managed = False

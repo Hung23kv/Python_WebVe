@@ -1,0 +1,61 @@
+{% extends 'baseAdmin.html' %}
+{% block main-Admin%}
+<style>
+    .th-head {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+</style>
+<script>
+    function del_confirm(strlink){
+        ok = confirm("Bạn có muốn xóa không ?");
+            if (ok != 0){
+                window.location.href = strlink;
+                }
+            }
+</script>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" style="text-align: center">Danh sách xe</h1>
+            <a  class="btn btn-success" href="{%url 'insertBus' %}" style="margin-bottom: 20px;">Thêm xe</a>
+        </div>
+    </div>
+    <div class="table-reponsive table-bordered">
+        <table class="table">
+            <thead>
+                <tr class="th-head">
+                    <th>STT</th>
+                    <th>Tên xe</th>
+                    <th>Hình ảnh</th>
+                    <th>Loại</th>
+                    <th>Số lượng ghế</th>
+                    <th>Biển số</th>
+                    <th colspan="2" style="text-align: center;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu mẫu -->
+                {% for b in listBus%}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{b.name}}</td>
+                    <td><img src="{{b.image.url}}" width='100' height='100'></td>
+                    <td>{{b.type}}</td>
+                    <td>{{b.seat_count}}</td>
+                    <td>{{b.license_plate}}</td>
+                    <td><a href="{%url 'detailBus' b.id %}" class='btn btn-warning'>Sửa</a></td>
+                    <td><a href="{%url 'deleteBus' b.id %}" class='btn btn-danger'
+                        onclick = "return confirm('Bạn thức sự muốn xóa thông tin xe này không ?')"
+                        >Xóa</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</div>
+{% endblock main-Admin%}
