@@ -49,73 +49,44 @@
         <!-- Results -->
         <div class="results">
             <div class='results-header'>
-                <h2>🚌 Hiện có 3 chuyến</h2>
+                <h2>🚌 Hiện có {{list.count}} chuyến  </h2>
             </div>
 
             <!-- Bus Cards - Horizontal Layout -->
-            <div class="bus-cards-grid">
+            {% for t in list %}
+                <div class="bus-cards-grid">
                 <div class="bus-card">
                     <div class="bus-info">
                         <div class="company-info">
-                            <img src="Image/bus1.jpg" alt="Xe">
+                            <img src="{{t.bus.image.url}}" alt="Xe">
                             <div>
-                                <h3>Xe Hòa Bình</h3>
-                                <p>25/03/2025</p>
-                                <p>Ghế ngồi</p>
+                                <h3>{{t.bus.name}}</h3>
+                                <p>{{t.departure_date}}</p>
+                                <p>{{t.bus.type}}</p>
                             </div>
                         </div>
                         <div class="trip-info">
                             <div class="time-info">
                                 <div class="departure">
-                                    <p>Hà Nội</p>
+                                    <p>{{t.route.place}}</p>
                                 </div>
-                                <div class="duration">4h</div>
+                                <div class="duration">{{t.route.duration}}</div>
                                 <div class="arrival">
-                                    <p>Hải Phòng</p>
+                                    <p>{{t.route.destination}}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="price-info">
                             <div class="price">
-                                <span class="current-price">200.000đ</span>
+                                <span class="current-price">{{t.ticket_price}} VNĐ</span>
                             </div>
-                            <span class="seats">Còn 10 chỗ trống</span>
-                            <a class="btn btn-primary" href="{%url 'detail'%}" role="button">Xem chi tiết</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bus-card">
-                    <div class="bus-info">
-                        <div class="company-info">
-                            <img src="Image/bus2.jpg" alt="Xe">
-                            <div>
-                                <h3>Xe Mai Linh</h3>
-                                <p>26/03/2025</p>
-                                <p>Giường nằm</p>
-                            </div>
-                        </div>
-                        <div class="trip-info">
-                            <div class="time-info">
-                                <div class="departure">
-                                    <p>TP. Hồ Chí Minh</p>
-                                </div>
-                                <div class="duration">8h</div>
-                                <div class="arrival">
-                                    <p>Nha Trang</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="price-info">
-                            <div class="price">
-                                <span class="current-price">350.000đ</span>
-                            </div>
-                            <span class="seats">Còn 5 chỗ trống</span>
-                            <button type="button" class="book-button">Xem chi tiết</button>
+                            <span class="seats">{{t.available_seats}} chỗ trống</span>
+                            <a class="btn btn-primary" href="{%url 'detail' t.id %}" role="button">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock main-content %}

@@ -1,0 +1,59 @@
+{% extends 'baseAdmin.html' %}
+{% block main-Admin%}
+<style>
+    .th-head {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+</style>
+<script>
+    function del_confirm(strlink){
+        ok = confirm("Bạn có muốn xóa không ?");
+            if (ok != 0){
+                window.location.href = strlink;
+                }
+            }
+</script>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" style="text-align: center">Danh sách tuyến đi </h1>
+            <a  class="btn btn-success" href="{%url 'insertRoute' %}" style="margin-bottom: 20px;">Thêm tuyến</a>
+        </div>
+    </div>
+    <div class="table-reponsive table-bordered">
+        <table class="table">
+            <thead>
+                <tr class="th-head">
+                    <th>STT</th>
+                    <th>Nơi đi </th>
+                    <th>Noi đến</th>
+                    <th>Khoảng cách</th>
+                    <th>Thời gian</th>
+                    <th colspan="2" style="text-align: center;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu mẫu -->
+                {% for r in listRoute%}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{r.place}}</td>
+                    <td>{{r.destination}}</td>
+                    <td>{{r.distance}}</td>
+                    <td>{{r.duration}}</td>
+                    <td><a href="" class='btn btn-warning'>Sửa</a></td>
+                    <td><a href="" class='btn btn-danger'
+                        onclick = "return confirm('Bạn thức sự muốn xóa chuyến này không ?')"
+                        >Xóa</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</div>
+{% endblock main-Admin%}

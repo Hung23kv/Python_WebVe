@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+     <link rel="stylesheet" type="text/css" href="{% static "/css/info.css" %}">
+{% endblock %}
+{% block main-content %}
+<div class="container main-content">
+    <!-- Profile Card -->
+    <div class="profile-card">
+        <img src="{% static '' %}" alt="Profile Image" class="profile-image">
+        <h2 class="profile-name">{{ user.name }}</h2>
+        
+        <div class="profile-info">
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="info-text">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ user.email }}</div>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="info-text">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">{{ user.phone }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tickets Section -->
+    <div class="tickets-section">
+        <h2 class="section-title">Vé của tôi</h2>
+        {% for ticket in tickets %}
+        <div class="tickets-container">
+            <div class="ticket-card">
+                <div class="ticket-header">
+                    <div class="ticket-type">Vé xe khách</div>
+                    <div class="ticket-status status-confirmed">{{ ticket.status }}</div>
+                </div>
+                <div class="ticket-body">
+                    <div class="ticket-columns">
+                        <!-- Ticket Information Column -->
+                        <div class="ticket-info-column">
+                            <div class="ticket-detail">
+                                <div class="detail-label">ID</div>
+                                <div class="detail-value">{{ ticket.id }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Nơi đi - Nơi đến</div>
+                                <div class="detail-value">{{ ticket.trip.route.place }} - {{ ticket.trip.route.destination }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Ngày đặt</div>
+                                <div class="detail-value">{{ ticket.booking_time|date:"d/m/Y H:i" }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Xe</div>
+                                <div class="detail-value">{{ ticket.trip.bus.name }} - {{ ticket.trip.bus.license_plate }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Ngày khởi hành</div>
+                                <div class="detail-value">{{ ticket.trip.departure_date|date:"d/m/Y" }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Vị trí ghế ngồi</div>
+                                <div class="detail-value">{{ ticket.seat_numbers }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Giá vé</div>
+                                <div class="detail-value">{{ ticket.total_price }} vnđ</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Instructions Column -->
+                        <div class="payment-info-column">
+                            <h3>Hướng dẫn thanh toán - Cọc vé</h3>
+                            <div class="ticket-detail">
+                                <div class="detail-label">STK</div>
+                                <div class="detail-value">0123456789</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Ngân hàng</div>
+                                <div class="detail-value">Vietcombank</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Tên</div>
+                                <div class="detail-value">CÔNG TY VẬN TẢI XYZ</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Cú pháp thanh toán</div>
+                                <div class="detail-value">ID_TenKhachHang_NoiDI-NoiDen_NgayDi_"Noi dung thanh toán"</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Lưu ý</div>
+                                <div class="detail-value">Sau khi chúng tôi kiểm tra lại thông tin sẽ gửi lại vé xe qua email trước 24 tiếng xe khởi hành</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-tickets">
+            <p>Bạn chưa có vé nào</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock main-content %}

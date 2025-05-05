@@ -8,37 +8,62 @@
     <div class="booking-card">
         <div class="card-content">
             <div class="image-container">
-                <img src="Image/sample-image.jpg" alt="Ảnh xe">
+                <img src="{{trip.bus.image.url}}" alt="Ảnh xe">
             </div>
         
             <div class="details-container">
                 <div class="header">
                     <div class="title-section">
                         <h2>
-                            Xe Giường Nằm
+                            {{trip.bus.name}}
                             <span class="rating">
-                                <i class="fas fa-star"></i> 25/03/2025
+                                <i class="fas fa-star"></i> {{trip.departure_date}}
                             </span>
                         </h2>
                         <br>
-                        <h4>Giường Nằm Cao Cấp</h4>
+                        <h4>{{trip.bus.type}}</h4>
                     </div>
                     <div class="price-section">
-                        <div class="price">250.000đ</div>
-                        <div class="seats">Còn 5 chỗ trống</div>
-                        <button class="btn-choose" type="submit">Chọn ghế</button>
+                        <div class="price">{{trip.ticket_price}}</div>
+                        <div class="seats">Còn {{trip.available_seats}} chỗ trống</div>
+                        <button class="btn-choose" type="submit"  onclick="checkLoginAndShowSeats()" >Chọn ghế</button>
                     </div>
                 </div>
                 
-        
+                <div class="seat-selection" id="seatSelection" style="display: none;">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group" style="margin: 20px 0; max-width: 300px;">
+                        <label for="seatQuantity" style="display: block; margin-bottom: 8px;">Số lượng ghế:</label>
+                        <input type="number" 
+                            id="seatQuantity" 
+                            class="form-control"
+                            name="seatQuantity" 
+                            min="1" 
+                            max="{{trip.available_seats}}" 
+                            value="1"
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <small class="text-muted" style="display: block; margin-top: 4px;">
+                                Tối đa {{trip.available_seats}} ghế
+                            </small>
+                        <!-- Add total price display -->
+                        <input type="hidden" name="price" id="hiddenPrice" value="{{trip.ticket_price}}">
+                        <div class="total-price" style="margin-top: 15px; font-size: 18px; font-weight: bold;">
+                            Thành tiền: <span id="totalPrice">{{trip.ticket_price}}</span> VNĐ
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Đặt vé</button>
+                    </div>
+                    </form>
+                    
+                </div>
                 <!-- Journey details -->
                 <div class="journey">
                     <div class="journey-point">
                         <div class="journey-marker"></div>
                         <div class="journey-time">
-                            <span class="location">• Hà Nội</span>
+                            <span class="location">• {{trip.route.place}}</span>
                         </div>
-                        <div class="duration">6 giờ</div>
+                        <div class="duration">{{trip.route.duration}}</div>
                     </div>
         
                     <div class="journey-point">
@@ -47,7 +72,7 @@
                         </div>
                         <div class="journey-details">
                             <div class="journey-time">
-                                <span class="location">• Sài Gòn</span>
+                                <span class="location">{{trip.route.destination}}</span>
                             </div>
                         </div>
                     </div>
@@ -55,14 +80,7 @@
             </div>
         </div>        
     </div>
-    <div id="seat-dialog" class="modal">
-        <div class="modal-content">
-            <button class="close-btn">&times;</button>
-            <div id="seat-content">
-                <!-- Nội dung chọn ghế sẽ được load động -->
-            </div>
-        </div>
-    </div>
+   
 
     <div class="tabs">
         <ul class="tab-list">
@@ -71,9 +89,6 @@
             </li>
             <li class="tab-item">
                 <button class="tab-button" data-tab="chinh-sach">Chính sách</button>
-            </li>
-            <li class="tab-item">
-                <button class="tab-button" data-tab="hinh-anh">Hình ảnh</button>
             </li>
         </ul>
         <div id="don-tra" class="tab-content active">
@@ -84,38 +99,29 @@
             <div class="points-grid" style="display: flex; gap: 20px;">
                 <div style="flex: 1;">
                     <h3 class="points-title">Điểm đón</h3>
+                    {% for p in pickup %}
                     <div class="point">
                         <div class="point-time">
-                            <span class="point-time-value">08:00</span>
+                            <span class="point-time-value">{{p.time}}</span>
                             <span> 🗺️ </span>
-                            <span style="margin-left: 8px; color: #4b5563;">Trường Đại Học A</span>
+                            <span style="margin-left: 8px; color: #4b5563;">{{p.location}}</span>
                         </div>
                     </div>
-                    <div class="point">
-                        <div class="point-time">
-                            <span class="point-time-value">08:30</span>
-                            <span> 🗺️ </span>
-                            <span style="margin-left: 8px; color: #4b5563;">Bến xe B</span>
-                        </div>
-                    </div>
+                    {%endfor%}
                 </div>
                 
                 <div style="flex: 1;">
                     <h3 class="points-title">Điểm trả</h3>
+                    {% for d in dropoff %}
                     <div class="point">
                         <div class="point-time">
-                            <span class="point-time-value">17:00</span>
+                            <span class="point-time-value">{{d.time}}</span>
                             <span> 🗺️ </span>
-                            <span style="margin-left: 8px; color: #4b5563;">Bến xe B</span>
+                            <span style="margin-left: 8px; color: #4b5563;">{{d.location}}</span>
                         </div>
                     </div>
-                    <div class="point">
-                        <div class="point-time">
-                            <span class="point-time-value">17:30</span>
-                            <span> 🗺️ </span>
-                            <span style="margin-left: 8px; color: #4b5563;">Trường Đại Học A</span>
-                        </div>
-                    </div>
+                    {%endfor%}
+                    
                 </div>
             </div>
         </div>
@@ -125,37 +131,27 @@
             <p>- Có mặt trước 15 phút.</p>
             <p>- Không làm ồn, vứt rác trên xe.</p>
         </div>
-        <div id="hinhanh" class="tab-content">
-            <div id="carouselExampleIndicators" class="carousel slide">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                    <img src="..." class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                    <img src="..." class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                    <img src="..." class="d-block w-100" alt="...">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-                </div>
-        </div>
     </div>
 </div>
+
 <script>
+    function checkLoginAndShowSeats() {
+        {% if not request.session.user_name %}
+            if(confirm('Vui lòng đăng nhập để đặt vé. Bạn có muốn chuyển đến trang đăng nhập không?')) {
+                window.location.href = "{% url 'login' %}";
+            }
+        {% else %}
+            const seatSelection = document.getElementById('seatSelection');
+            if (seatSelection.style.display === 'none') {
+                seatSelection.style.display = 'block';
+                seatSelection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                seatSelection.style.display = 'none';
+            }
+        {% endif %}
+    }
+
+    // Tab switching
     document.querySelectorAll('.tab-button').forEach(button => {
         button.addEventListener('click', () => {
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -164,47 +160,33 @@
             document.getElementById(button.getAttribute('data-tab')).classList.add('active');
         });
     });
-    document.addEventListener('DOMContentLoaded', function() {
-        const chooseSeatButton = document.querySelector('.btn-choose');
-        const seatDialog = document.getElementById('seat-dialog');
-        const seatContent = document.getElementById('seat-content');
-        const closeButton = seatDialog.querySelector('.close-btn');
 
-        chooseSeatButton.addEventListener('click', function() {
-            // Sử dụng fetch để load nội dung động
-            fetch("{% url 'seat' %}")
-                .then(response => response.text())
-                .then(html => {
-                    seatContent.innerHTML = html;
-                    // gan lai cac js cu
-                    seatContent.querySelectorAll("script").forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    newScript.textContent = oldScript.textContent; // Copy nội dung script
-                    document.body.appendChild(newScript); // Gắn lại vào document
-                    oldScript.remove(); // Xóa script cũ
-                    });
+    // Price calculation
+    const seatQuantityInput = document.getElementById('seatQuantity');
+    if (seatQuantityInput) {
+        seatQuantityInput.addEventListener('input', updatePrice);
+        seatQuantityInput.addEventListener('change', validateAndUpdatePrice);
+    }
+    function updatePrice() {
+        const quantity = parseInt(this.value) || 0;
+        const price = parseInt('{{trip.ticket_price}}');
+        const totalPrice = quantity * price;
+        const formattedPrice = totalPrice.toLocaleString('vi-VN');
+        document.getElementById('totalPrice').textContent = formattedPrice;
+        document.getElementById('hiddenPrice').value = totalPrice;
+    }
 
-                    seatDialog.style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Lỗi load nội dung:', error);
-                    alert('Không thể tải giao diện chọn ghế');
-                });
-        });
-
-        closeButton.addEventListener('click', function() {
-            seatDialog.style.display = 'none';
-        });
-
-        // Đóng modal khi click ngoài
-        window.addEventListener('click', function(event) {
-            if (event.target == seatDialog) {
-                seatDialog.style.display = 'none';
-            }
-        });
-        
-    });
-    
+    function validateAndUpdatePrice() {
+        const maxSeats = {{trip.available_seats}};
+        if (this.value > maxSeats) {
+            this.value = maxSeats;
+            alert(`Số lượng ghế không được vượt quá ${maxSeats}`);
+        }
+        if (this.value < 1) {
+            this.value = 1;
+        }
+        updatePrice.call(this);
+    }
 </script>
 
 <style>

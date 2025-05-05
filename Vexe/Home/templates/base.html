@@ -25,20 +25,30 @@
                     <a class="nav-link active" aria-current="page" href="#">Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="{% url 'trip' %}">Chuyến xe</a>
+                    <a class="nav-link" href="{% url 'tripHome' %}">Chuyến xe</a>
                     </li>
                     <li class="nav-item">
                     <a class="nav-link" href="#">Liên hệ</a>
                     </li>
+                    {% if request.session.user_name %}
                     <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Xin chào bạn
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-                        <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
-                    </ul>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Xin chào {{ request.session.user_name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'info_user' %}">Thông tin cá nhân</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="">Đăng xuất</a></li>
+                        </ul>
                     </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Đăng nhập</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Đăng ký</a>
+                    </li>
+                {% endif %}
                 </ul>
                 </div>
             </div>

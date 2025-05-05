@@ -78,6 +78,7 @@ class AuthUserUserPermissions(models.Model):
 
 
 class Bus(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     type = models.CharField(max_length=100)
     seat_count = models.IntegerField()
@@ -135,6 +136,7 @@ class DjangoSession(models.Model):
 
 
 class Dropoff(models.Model):
+    id = models.AutoField(primary_key=True)
     trip = models.ForeignKey('Trip', models.DO_NOTHING)
     time = models.TimeField()
     location = models.CharField(max_length=250)
@@ -155,6 +157,7 @@ class Imagebus(models.Model):
 
 
 class Pickup(models.Model):
+    id = models.AutoField(primary_key=True)
     trip = models.ForeignKey('Trip', models.DO_NOTHING)
     time = models.TimeField()
     location = models.CharField(max_length=250)
@@ -165,6 +168,7 @@ class Pickup(models.Model):
 
 
 class Route(models.Model):
+    id = models.AutoField(primary_key=True)
     place = models.CharField(max_length=150)
     destination = models.CharField(max_length=150)
     distance = models.FloatField()
@@ -176,6 +180,7 @@ class Route(models.Model):
 
 
 class Ticket(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey('Users', models.DO_NOTHING)
     trip = models.ForeignKey('Trip', models.DO_NOTHING)
     quantity = models.IntegerField()
@@ -192,6 +197,7 @@ class Ticket(models.Model):
 
 
 class Trip(models.Model):
+    id = models.AutoField(primary_key=True)
     bus = models.ForeignKey(Bus, models.DO_NOTHING)
     route = models.ForeignKey(Route, models.DO_NOTHING)
     ticket_price = models.IntegerField()
@@ -205,11 +211,12 @@ class Trip(models.Model):
 
 
 class Users(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150)
     email = models.CharField(unique=True, max_length=150)
     password = models.CharField(max_length=50)
     phone = models.CharField(max_length=10)
-    role = models.CharField(max_length=50)
+    role = models.TextField(max_length=50)
     otp = models.TextField(blank=True)
     ver_otp = models.TextField(blank=True)
     created_at = models.DateField()

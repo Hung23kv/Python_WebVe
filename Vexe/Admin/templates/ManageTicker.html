@@ -1,0 +1,100 @@
+{% extends 'baseAdmin.html' %}
+{% block main-Admin%}
+<style>
+    .th-head {
+        background-color: #3498db;
+        color: white;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12" style="margin-top: 20px;margin-bottom: 20px;">
+            <h1 class="page-header" style="text-align: center;">Danh sách vé xe</h1>
+        </div>
+    </div>
+    
+    <form method="post" id="tripForm">
+        {% csrf_token %}
+        <div class="row align-items-center mb-4">
+            <div class="col-12">
+                <select class="form-select form-select-lg" name="cboTrip" id="tripSelect" required>
+                    <option value="">--Lựa chọn chuyến--</option>
+                    {% for trip in listGotrip %}
+                        <option value="{{ trip.id }}" {% if selected_trip_id == trip.id %}selected{% endif %}>
+                            {{ trip.route }} - {{ trip.departure_date }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive table-bordered">
+    <table class="table">
+        <thead>
+            <tr class="th-head">
+                <th>ID vé</th>
+                <th>Tên khách hàng</th>
+                <th>SDT</th>
+                <th>Số lượng vé</th>
+                <th>Ngày đặt</th>
+                <th>Thành tiền</th>
+                <th>Trạng thái</th>
+                <th>Ghi chú</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="ticketTableBody">
+            {% if selected_trip_id %}
+                {% if listTicket %}
+                    {% for ticket in listTicket %}
+                    <tr>
+                        <td>{{ ticket.id }}</td>
+                        <td>{{ ticket.user.name }}</td>
+                        <td>{{ ticket.user.phone }}</td>
+                        <td>{{ ticket.quantity }}</td>
+                        <td>{{ ticket.booking_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ ticket.total_price }}</td>
+                        <td>{{ ticket.status }}</td>
+                        <td>{{ ticket.note|default:"-" }}</td>
+                        <td>
+                            <button class="btn btn-info" >
+                                Quản lý
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center">Không có vé nào cho chuyến này.</td>
+                    </tr>
+                {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="9" class="text-center">Vui lòng chọn một chuyến đi để xem danh sách vé.</td>
+                </tr>
+            {% endif %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+<script>
+function del_confirm(strlink) {
+    if (confirm("Bạn có muốn xóa không?")) {
+        window.location.href = strlink;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Tự động submit form khi select thay đổi
+    document.getElementById('tripSelect').addEventListener('change', function() {
+        document.getElementById('tripForm').submit();
+    });
+});
+</script>
+{% endblock main-Admin%}
